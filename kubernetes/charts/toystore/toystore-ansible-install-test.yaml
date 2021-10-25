@@ -1,0 +1,12 @@
+---
+- hosts: 127.0.0.1
+  become: false
+  tasks:
+  - name: Install Toystore Chart for Test Env.
+    kubernetes.core.helm:
+        name: toystore-test
+        release_namespace: test
+        create_namespace: true
+        chart_ref: .
+        values_files:
+           - ./test-values.yaml

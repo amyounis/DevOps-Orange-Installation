@@ -1,0 +1,18 @@
+---
+- hosts: 127.0.0.1
+  become: false
+  tasks:
+  - name: Uninstall Jenkins Chart
+    kubernetes.core.helm:
+        name: jenkins
+        namespace: build
+        state: absent
+        wait: true
+
+  - name: Delete Jenkins persistence Volume
+    become: false
+    command: kubectl delete -f ./jenkins-pv.yaml
+
+  - name: Delete Jenkins Service Account
+    become: false
+    command: kubectl delete -f ./jenkins-sa.yaml

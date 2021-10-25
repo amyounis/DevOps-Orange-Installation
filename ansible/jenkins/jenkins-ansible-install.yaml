@@ -1,0 +1,27 @@
+---
+- hosts: 127.0.0.1
+  vars:
+     helm_chart_url: "https://charts.jenkins.io"
+  become: false
+  tasks:
+  - name: Create Jenkins persistence Volume
+    become: false
+    command: kubectl apply -f ./jenkins-pv.yaml
+
+  - name: Create Jenkins Service Account
+    become: false
+    command: kubectl apply -f ./jenkins-sa.yaml
+ 
+  - name: Add helm repo
+    kubernetes.core.helm_repository:
+        name: jenkins
+        repo_url: "{{ helm_chart_url }}"
+
+  - name: Install Jenkins Chart
+    kubernetes.core.helm:
+        name: jenkins
+        namespace: build
+        create_namespace: true
+        chart_ref: jenkins/jenkins
+        values_files:
+           - ./jenkins-values.yaml

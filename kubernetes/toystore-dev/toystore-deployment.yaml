@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: toystore
+spec:
+  ports:
+  - port: 8080
+  selector:
+    app: toystore
+  type: NodePort
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: toystore
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: toystore
+  template:
+    metadata:
+      labels:
+        app: toystore
+    spec:
+      containers:
+      - image: docker.io/library/toy0store:1.7
+        name: toystore
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: mysql-root-password
+        - name: MYSQL_URL
+          value: jdbc:mysql://mysql:3306/toystore?useSSL=false&allowPublicKeyRetrieval=true
+        ports:
+        - containerPort: 8080
+          name: toystore

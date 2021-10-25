@@ -1,0 +1,16 @@
+app:
+  name: toystore-test
+  replicaCount: 1
+  container:
+    image:
+      repository: 10.105.168.213:5003/toy0store
+      tag: v1.0.0
+    port: 8080
+    env:
+       - key: MYSQL_URL
+         value: jdbc:mysql://mysql:3306/toystore?useSSL=false&allowPublicKeyRetrieval=true
+  service:
+    type: NodePort
+    port: 8080
+
+mySqlSecret: mysql-secret

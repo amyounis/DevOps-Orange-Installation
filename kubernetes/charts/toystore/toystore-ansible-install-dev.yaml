@@ -1,0 +1,15 @@
+---
+
+- name: Toystore_dev
+  hosts: localhost
+  become: false
+  
+  tasks:
+  - name: Install Toystore Chart for Dev Env
+    kubernetes.core.helm:
+      name: toystore-dev
+      release_namespace: dev
+      create_namespace: true
+      chart_ref: .
+      values_files:
+         - ./dev-values.yaml
